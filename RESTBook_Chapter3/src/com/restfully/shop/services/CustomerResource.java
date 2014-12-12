@@ -1,19 +1,21 @@
 package com.restfully.shop.services;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 
@@ -43,15 +45,56 @@ public class CustomerResource {
 	@Produces("application/xml")
 	
 	public StreamingOutput getCustomer(@PathParam("id") int id) {
-		return null;
+		final Customer customer = customerDB.get(id);
+		if (customer == null) {
+			throw new WebApplicationException(Response.Status.NOT_FOUND);
+						
+		}
+		return new StreamingOutput(){
+			public void write(OutputStream outputStream) throws IOException,
+					WebApplicationException {
+			outputCustomer(outputStream, customer);
+			}
+			
+		};
+		}
 		
+		@PUT
+		@Path("{id}")
+		@Consumes ("application/xml")
+		public void updateCustomer (@PathParam("id")
+						int id, InputStream is) {
+			Customer update = readCustomer (is);
+			Customer current  = customerDB.get(id);
+			
+			
+			if (current == null) {
+				throw new WebApplicationException(Response.Status.NOT_FOUND);
+				
+				current.setFirstname(update.getFirstname());
+				current.setLastname(update.getLastname());
+				current.setStreet(update.getStreet());
+				current.setState(update.getState());
+				current.setZip(update.getZip());
+				current.setCountry(update.getCountry());
+				
+			}
+			
+		}
+		
+		
+	private Customer readCustomer(InputStream is) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+
+	}
+
+	protected void outputCustomer(OutputStream outputStream, Customer customer) {
+		// TODO Auto-generated method stub
 		
 	}
 	
-
-	private Customer readCustomer(InputStream is) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }
