@@ -3,6 +3,8 @@ package com.restfully.shop.services;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -91,8 +93,19 @@ public class CustomerResource {
 
 	}
 
-	protected void outputCustomer(OutputStream outputStream, Customer customer) {
-		// TODO Auto-generated method stub
+	protected void outputCustomer(OutputStream outputStream, Customer cust) throws IOException {
+			
+		PrintStream writer = new PrintStream(os);
+		writer.println("<customer id =\"" + cust.getId() + "\">");
+		writer.println("<first-name>"+ cust.getFirstname() + "</first-name>");
+		writer.println("<last-name>" + cust.getLastname() + "</last-name>");
+		writer.println("<street>" + cust.getStreet() + "</street>");
+		writer.println("<city>" + cust.getCity() + "</city>");
+		writer.println("<state>" + cust.getState() + "</state>");
+		writer.println("<zip>" + cust.getZip() + "</zip>");
+		writer.println("<country>" + cust.getCountry() + "</country>");
+
+		
 		
 	}
 	
