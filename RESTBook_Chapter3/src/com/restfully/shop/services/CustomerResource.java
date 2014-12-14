@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,6 +19,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
 
 import com.restfully.shop.domain.Customer;
 
@@ -70,44 +73,46 @@ public class CustomerResource {
 			Customer current  = customerDB.get(id);
 			
 			
-			if (current == null) {
+			if (current == null) 
 				throw new WebApplicationException(Response.Status.NOT_FOUND);
 				
-				current.setFirstname(update.getFirstname());
-				current.setLastname(update.getLastname());
+				current.setFirstName(update.getFirstName());
+				current.setLastName(update.getLastName());
 				current.setStreet(update.getStreet());
 				current.setState(update.getState());
 				current.setZip(update.getZip());
 				current.setCountry(update.getCountry());
-				
-			}
 			
 		}
 		
 		
-	private Customer readCustomer(InputStream is) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-
-	}
-
-	protected void outputCustomer(OutputStream outputStream, Customer cust) throws IOException {
+		protected void outputCustomer(OutputStream os, Customer cust) throws IOException {
 			
 		PrintStream writer = new PrintStream(os);
 		writer.println("<customer id =\"" + cust.getId() + "\">");
-		writer.println("<first-name>"+ cust.getFirstname() + "</first-name>");
-		writer.println("<last-name>" + cust.getLastname() + "</last-name>");
+		writer.println("<first-name>"+ cust.getFirstName() + "</first-name>");
+		writer.println("<last-name>" + cust.getLastName() + "</last-name>");
 		writer.println("<street>" + cust.getStreet() + "</street>");
 		writer.println("<city>" + cust.getCity() + "</city>");
 		writer.println("<state>" + cust.getState() + "</state>");
 		writer.println("<zip>" + cust.getZip() + "</zip>");
 		writer.println("<country>" + cust.getCountry() + "</country>");
-
-		
 		
 	}
+		
+		private Customer readCustomer(InputStream is) {
+			try {
+				DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+				Document doc = builder.parse(is);
+				Element root = doc.getDocumentElement();
+				
+				
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			return null;
+		}
 	
 
 }
